@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title></title>
+    <style type="text/css">@media only screen {
+    img {
+    max-width: 300px !important;
+    margin: 0 !important;
+    text-align: left !important
+    }
+    }</style>
+  </head>
+  <body style="background-color:#f5f5f5; margin:0; padding:30px" bgcolor="#f5f5f5">
+    <table id="masthead" style="border:0; margin:0 auto; max-width: 1000px" align="center" cellpadding="0" cellspacing="0" width="100%">
+      <tr>
+        <td style='color:#666666; font-family:"Product Sans", "Helvetica Neue", Helvetica, Arial, sans-serif; font-size:25px; line-height:30px; padding:0 0 30px 0; text-align:left' align="left">
+          QA Report
+        </td>
+      </tr>
+    </table>
+    <table id="card" style="background-color:#ffffff; border:0; border-bottom:2px solid #dddddd; border-left:1px solid #eeeeee; border-right:1px solid #eeeeee; margin:0 auto; padding:0 30px 30px 30px; max-width: 1000px" align="center" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+      <tr>
+        <td>
+          <table id="content" style="border:0; margin:0 auto" align="center" cellpadding="0" cellspacing="0" width="100%">
+            <tr>
+              <td class="headline copy" style='color:#666666; font-family:"Roboto", "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif; font-size:20px; line-height:26px; padding:30px 0 0 0; text-align:left' align="left">
+                Links
+              </td>
+            </tr>
+            <tr>
+              <td class="copy" style='color:#666666; font-family:"Roboto", "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif; font-size:14px; line-height:20px; padding:30px 0 0 0; text-align:left' align="left">
+                <table class="data link" style="border:0" cellpadding="0" cellspacing="0" width="100%">
+                 <tr>
+                    <td class="col-1 header" style="background-color:#f5f5f5; border-top:none; color:#666666; font-size:13px; font-weight:bold; line-height:19px; padding:15px; text-align:left; vertical-align:top;" width="40%" bgcolor="#f5f5f5" align="left" valign="top">
+                      Destination URL
+                    </td>
+                    <td class="col-2 header" style="background-color:#f5f5f5; border-top:none; color:#666666; font-size:13px; font-weight:bold; line-height:19px; padding:15px 15px 15px 0; text-align:left; vertical-align:top;" width="20%" bgcolor="#f5f5f5" align="left" valign="top">
+                      Label
+                    </td>
+                    <td class="col-3 header" style="background-color:#f5f5f5; border-top:none; color:#666666; font-size:13px; font-weight:bold; line-height:19px; padding:15px 15px 15px 0; text-align:left; vertical-align:top;" width="40%" bgcolor="#f5f5f5" align="left" valign="top">
+                      Linked Content
+                    </td>
+                  </tr>
+                  <? for (var i = 0; i < data.links.href.length; i++) { ?>
+                    <? var linkData = getTrackedData(data.links.href[i]) ?>
+                    <tr>
+                      <td class="col-1" style="border-top:1px solid #dddddd; color:#666666; font-size:13px; line-height:19px; padding:30px 30px 30px 0; text-align:left; vertical-align:top; word-break:break-all" width="40%" align="left" valign="top">
+                        <?= linkData.url ?>
+                      </td>
+                      <td class="col-2" style="border-top:1px solid #dddddd; color:#666666; font-size:13px; line-height:19px; padding:30px 30px 30px 0; text-align:left; vertical-align:top;" width="20%" align="left" valign="top">
+                        <?= linkData.label ?>
+                      </td>
+                      <td class="col-3" style="border-top:1px solid #dddddd; color:#666666; font-size:13px; line-height:19px; padding:30px 30px 30px 0; text-align:left; vertical-align:top;" width="40%" align="left" valign="top">
+                         <?!= data.links.inner[i] ?>
+                      </td>
+                    </tr>
+                  <? } ?>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td class="headline copy" style='color:#666666; font-family:"Roboto", "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif; font-size:20px; line-height:26px; padding:30px 0 0 0; text-align:left' align="left">
+                Images
+              </td>
+            </tr>
+            <tr>
+              <td class="copy" style='color:#666666; font-family:"Roboto", "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif; font-size:14px; line-height:20px; padding:30px 0 0 0; text-align:left' align="left">
+                <table class="data images" style="border:0" cellpadding="0" cellspacing="0" width="100%">
+                  <tr>
+                    <td class="col-1 header" style="background-color:#f5f5f5; border-top:none; color:#666666; font-size:13px; font-weight:bold; line-height:19px; padding:15px; text-align:left; vertical-align:top;" width="40%" bgcolor="#f5f5f5" align="left" valign="top">
+                      Image URL
+                    </td>
+                    <td class="col-2 header" style="background-color:#f5f5f5; border-top:none; color:#666666; font-size:13px; font-weight:bold; line-height:19px; padding:15px 15px 15px 0; text-align:left; vertical-align:top;" width="20%" bgcolor="#f5f5f5" align="left" valign="top">
+                      Alt Text
+                    </td>
+                    <td class="col-3 header" style="background-color:#f5f5f5; border-top:none; color:#666666; font-size:13px; font-weight:bold; line-height:19px; padding:15px 15px 15px 0; text-align:left; vertical-align:top;" width="40%" bgcolor="#f5f5f5" align="left" valign="top">
+                      Image Preview
+                    </td>
+                  </tr>
+                  <? for (var i = 0; i < data.imgs.src.length; i++) { ?>
+                    <tr>
+                      <td class="col-1" style="border-top:1px solid #dddddd; color:#666666; font-size:13px; line-height:19px; padding:30px 30px 30px 0; text-align:left; vertical-align:top; word-break:break-all" width="40%" align="left" valign="top">
+                        <?= data.imgs.src[i] ?>
+                      </td>
+                      <td class="col-2" style="border-top:1px solid #dddddd; color:#666666; font-size:13px; line-height:19px; padding:30px 30px 30px 0; text-align:left; vertical-align:top;" width="20%" align="left" valign="top">
+                        <?= data.imgs.alt[i] ?>
+                      </td>
+                      <td class="col-3" style="border-top:1px solid #dddddd; color:#666666; font-size:13px; line-height:19px; padding:30px 30px 30px 0; text-align:left; vertical-align:top; word-break:break-all" width="40%" align="left" valign="top">
+                        <img src="<?= data.imgs.src[i] ?>" />
+                      </td>
+                    </tr>
+                  <? } ?>
+                </table>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

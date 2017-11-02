@@ -1,0 +1,214 @@
+<style>
+body {
+ margin: 0;
+ padding: 0;
+}
+h1 {
+ color: #00695c;
+ font-family: "Product Sans", 'Helvetica Neue', Helvetica, Arial, sans-serif;
+ font-size: 25px;
+ line-height: 30px;
+ margin: 0;
+}
+h2,
+p,
+label {
+ font-family: Arial, sans-serif;
+ font-weight: normal;
+}
+h2 {
+ color: #00695c;
+ font-size: 14pt;
+ line-height: 29px;
+ margin: 0;
+}
+p,
+label {
+ color: #222222;
+ font-size: 80%;
+}
+header {
+ background-color: #f5f5f5;
+ border-bottom: 1px solid #f1f1f1;
+ box-sizing: border-box;
+ height: 60px;
+ padding: 15px 30px;
+}
+section {
+ padding: 15px 30px;
+}
+input[type="button"] {
+ background-color: #00695c;
+ border-radius: 2px;
+ border: 1px solid #00695c;
+ color: #ffffff;
+ cursor: pointer;
+ font-size: 11px;
+ font-weight: bold;
+ line-height: 27px;
+ outline: none;
+ padding: 0 20px;
+ text-transform: uppercase;
+}
+input[type="button"]:focus {
+ -webkit-box-shadow: inset 0 0 0 1px #ffffff;
+}
+</style>
+<!DOCTYPE html>
+<header>
+  <h1>QA Proofing Tool</h1>
+</header>
+<section class="proof-form">
+  <h2>Send Email Proof</h2>
+  <form id="send-proof">
+    <!-- Hidden input for email template content -->
+    <p>Paste your email content below (it should already be in your clipboard)</p>
+    <textarea id="email-html" name="email-html" placeholder="Paste content here"></textarea><br />
+    <!-- Email aliases -->
+    <p>Select alias(es)</p>
+    <!-- Dev email alias -->
+    <input id="alias-dev-proof" type="checkbox" name="alias-dev-proof">
+    <label for="alias-dev-proof">Dev Alias (solsethtctest@gmail.com)</label><br />
+    <!-- QA email alias -->
+    <input id="alias-qa-proof" type="checkbox" name="alias-qa-proof">
+    <label for="alias-qa-proof">QA Alias (epsilonqatest@gmail.com​)</label><br />
+    <!-- Custom email addresses -->
+    <p>Add individual recipient(s) below (comma separated)</p>
+    <input id="emails-proof" type="text" placeholder="add email address(es)" name="emails-proof"><br />
+    <!-- Gamma ID -->
+    <p>Gamma ID (optional)</p>
+    <input id="gamma-id-proof" type="text" placeholder="Gamma ID" name="gamma-id-proof"><br /><br />
+    <!-- Send button -->
+    <!-- Apps Scipt is not accepting document.forms[0].elements as an argument -->
+    <!-- Instead I'm listing form values individually -->
+    <input type="button" value="Send Proof" onclick="google.script.run.withSuccessHandler(proofSuccess).send_proof(
+        document.forms[0].elements[0].value,
+        document.forms[0].elements[1].checked,
+        document.forms[0].elements[2].checked,
+        document.forms[0].elements[3].value,
+        document.forms[0].elements[4].value
+      )"
+    />
+  </form>
+  <p id="proof-alert"></p>
+</section>
+<section class="report-form">
+  <h2>Send QA Report</h2>
+  <form id="send-report">
+    <!-- Custom email addresses -->
+    <p>Add recipient(s) below (comma separated)</p>
+    <input id="emails-report" type="text" placeholder="add email address(es)" name="emails-report"><br /><br />
+    <!-- Send button -->
+    <input type="button" value="Send Report" onclick="google.script.run.withSuccessHandler(reportSuccess).send_report(
+        reportData,
+        document.forms[1].elements[0].value,
+        document.forms[0].elements[4].value
+      )"
+    />
+  </form>
+  <p id="report-alert"></p>
+</section>
+<section id="tool-preview">
+</section>
+<!-- Load JS last as per https://developers.google.com/apps-script/guides/html/best-practices -->
+<!-- jQuery -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<!-- Custom script -->
+<script>
+  reportData = {};
+  function createPreview() {
+    var emailContent = $("#email-html").val();
+    if (emailContent.trim() == "") {
+      $("#tool-preview").fadeOut(200).empty();
+    } else {
+      $("#tool-preview").append(emailContent).hide().fadeIn(200);
+    };
+  };
+  function parseEmailContent() {
+    // Get preview element
+    var emailContent = document.querySelector("#tool-preview");
+    // Get node data
+    var links = emailContent.querySelectorAll("a");
+    var imgs = emailContent.querySelectorAll("img");
+    // Initialize arrays
+    var linksHref = [];
+    var linksInner = [];
+    var imgsSrc = [];
+    var imgsAlt = [];
+    // Add links data to arrays
+    for (i=0;i < links.length;i++) {
+      linksHref.push(links[i].attributes.href.value);
+      // Check if link contents are empty
+      if (links[i].innerHTML.trim()) {
+        linksInner.push(links[i].innerHTML.trim());
+      } else {
+        linksInner.push("No linked content");
+      };
+    };
+    // MSO LINKS
+    // Make searchable string
+    var emailString = emailContent.innerHTML.toString();
+    // Find matches with comment format
+    var commentList = emailString.match(/<!--.*?-->/g);
+    // Add MSO links data to arrays
+    for (i=0;i < commentList.length;i++) {
+      var hrefList = commentList[i].match(/href=".*?"/g);
+      if (hrefList) {
+        for (n=0;n < hrefList.length;n++) {
+          // Remove surrounding match terms from string
+          var linkTrimmed = hrefList[n].replace('href="','').replace('"','');
+          linksHref.push(linkTrimmed);
+          if (linkTrimmed == "#") {
+            linksInner.push("Outlook specific link - This could be a CTA with missing URL for Outlook");
+          } else {
+            linksInner.push("Outlook specific link");
+          };
+        };
+      };
+    };
+    // Add images data to arrays
+    for (i=0;i < imgs.length;i++) {
+      // Check for Gamma tracking pixel
+      if (imgs[i].attributes.src.value.indexOf("https://www.google.com/appserve/mkt/proof/img/") == 0) {
+        imgsSrc.push("Gamma tracking pixel");
+        imgsAlt.push("No alt text");
+      } else {
+        imgsSrc.push(imgs[i].attributes.src.value);
+        // Check if alt text attribute is present
+        if (imgs[i].attributes.alt) {
+          // Check if alt text is blank
+          if (imgs[i].attributes.alt.value.trim()) {
+            imgsAlt.push(imgs[i].attributes.alt.value.trim());
+          } else {
+            imgsAlt.push("No alt text");
+          };
+        } else {
+          imgsAlt.push("Missing alt text attribute - an alt text attribute should always be present to prevent text-to-speech readers from reading the image URL");
+        };
+      };
+    };
+    // return data
+    return {
+      "links" : {
+        "href" : linksHref,
+        "inner" : linksInner
+      },
+      "imgs" : {
+        "src" : imgsSrc,
+        "alt" : imgsAlt
+      }
+    }
+  };
+  function proofSuccess() {
+    $("#proof-alert").text("Your proof has been sent!").fadeIn(200).delay(5000).fadeOut(200);
+  };
+  function reportSuccess() {
+    $("#report-alert").text("Your report has been sent!").fadeIn(200).delay(5000).fadeOut(200);
+  };
+  $("#email-html").focusout(
+    function() {
+      createPreview();
+      reportData = parseEmailContent();
+    }
+  );
+</script>
