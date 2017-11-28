@@ -121,6 +121,7 @@ input[type="button"]:focus {
     if (emailContent.trim() == "") {
       $("#tool-preview").fadeOut(200).empty();
     } else {
+      $("#tool-preview").fadeOut(200).empty();
       $("#tool-preview").append(emailContent).hide().fadeIn(200);
     };
   };
@@ -205,7 +206,7 @@ input[type="button"]:focus {
   function reportSuccess() {
     $("#report-alert").text("Your report has been sent!").fadeIn(200).delay(5000).fadeOut(200);
   };
-  $("#email-html").focusout(
+  $("#email-html").on("change keyup paste",
     function() {
       createPreview();
       reportData = parseEmailContent();
