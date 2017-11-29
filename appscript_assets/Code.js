@@ -79,10 +79,7 @@ function send_report(data, recipients, gammaId) {
 
 // Reformats Gamma Proofing Page HTML to comply with XML parser
 function xmlCleaner(xmlString) {
-  var fixedDoctype = xmlString.replace('<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">','<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "">');
-  var fixedHead = fixedDoctype.replace("</HEAD>","</head>");
-  var fixedBreaks = fixedHead.replace(/<br>/g,"<br />");
-  var fixedHtml = fixedBreaks.replace("</HTML>","</html>");
+  var fixedHtml = xmlString.replace('EN">','EN" "">').replace("</HEAD>","</head>").replace(/<br>/g,"<br />").replace("</HTML>","</html>");
   Logger.log("xmlCleaner: " + fixedHtml);
   return fixedHtml;
 }
