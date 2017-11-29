@@ -91,7 +91,8 @@ function getTrackedData(url) {
       "url" : url,
       "label" : "optout"
     };
-  } else if (url.indexOf("https://www.google.com/appserve/mkt/proof") == 0) {
+  } else if (url.indexOf("https://www.google.com/appserve/mkt/proof") == 0 ||
+             url.indexOf("http://www.google.com/appserve/mkt/proof") == 0) {
   // In case of normal tracked link
     // Fetch content from URL
     var htmlString = UrlFetchApp.fetch(url).getContentText();
