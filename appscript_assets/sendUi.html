@@ -129,62 +129,76 @@ input[type="button"]:focus {
     // Get preview element
     var emailContent = document.querySelector("#tool-preview");
     // Get node data
-    var links = emailContent.querySelectorAll("a");
-    var imgs = emailContent.querySelectorAll("img");
+    links = emailContent.querySelectorAll("a");
+    imgs = emailContent.querySelectorAll("img");
     // Initialize arrays
     var linksHref = [];
     var linksInner = [];
     var imgsSrc = [];
     var imgsAlt = [];
-    // Add links data to arrays
-    for (i=0;i < links.length;i++) {
-      linksHref.push(links[i].attributes.href.value);
-      // Check if link contents are empty
-      if (links[i].innerHTML.trim()) {
-        linksInner.push(links[i].innerHTML.trim());
-      } else {
-        linksInner.push("No linked content");
+    // If no links are present in message
+    if (links.length == 0) {
+      linksHref.push("No links in message");
+      linksInner.push("");
+    } else {
+      // Add links data to arrays
+      for (i=0;i < links.length;i++) {
+        linksHref.push(links[i].attributes.href.value);
+        // Check if link contents are empty
+        if (links[i].innerHTML.trim()) {
+          linksInner.push(links[i].innerHTML.trim());
+        } else {
+          linksInner.push("No linked content");
+        };
       };
-    };
-    // MSO LINKS
-    // Make searchable string
-    var emailString = emailContent.innerHTML.toString();
-    // Find matches with comment format
-    var commentList = emailString.match(/<!--.*?-->/g);
-    // Add MSO links data to arrays
-    for (i=0;i < commentList.length;i++) {
-      var hrefList = commentList[i].match(/href=".*?"/g);
-      if (hrefList) {
-        for (n=0;n < hrefList.length;n++) {
-          // Remove surrounding match terms from string
-          var linkTrimmed = hrefList[n].replace('href="','').replace('"','');
-          linksHref.push(linkTrimmed);
-          if (linkTrimmed == "#") {
-            linksInner.push("Outlook specific link - This could be a CTA with missing URL for Outlook");
-          } else {
-            linksInner.push("Outlook specific link");
+      // MSO LINKS
+      // Make searchable string
+      var emailString = emailContent.innerHTML.toString();
+      // Find matches with comment format
+      var commentList = emailString.match(/<!--.*?-->/g);
+      if (commentList) {
+        // Add MSO links data to arrays
+        for (i=0;i < commentList.length;i++) {
+          var hrefList = commentList[i].match(/href=".*?"/g);
+          if (hrefList) {
+            for (n=0;n < hrefList.length;n++) {
+              // Remove surrounding match terms from string
+              var linkTrimmed = hrefList[n].replace('href="','').replace('"','');
+              linksHref.push(linkTrimmed);
+              if (linkTrimmed == "#") {
+                linksInner.push("Outlook specific link - This could be a CTA with missing URL for Outlook");
+              } else {
+                linksInner.push("Outlook specific link");
+              };
+            };
           };
         };
       };
     };
-    // Add images data to arrays
-    for (i=0;i < imgs.length;i++) {
-      // Check for Gamma tracking pixel
-      if (imgs[i].attributes.src.value.indexOf("https://www.google.com/appserve/mkt/proof/img/") == 0) {
-        imgsSrc.push("Gamma tracking pixel");
-        imgsAlt.push("No alt text");
-      } else {
-        imgsSrc.push(imgs[i].attributes.src.value);
-        // Check if alt text attribute is present
-        if (imgs[i].attributes.alt) {
-          // Check if alt text is blank
-          if (imgs[i].attributes.alt.value.trim()) {
-            imgsAlt.push(imgs[i].attributes.alt.value.trim());
-          } else {
-            imgsAlt.push("No alt text");
-          };
+    // If no images are present in message
+    if (imgs.length == 0) {
+      imgsSrc.push("No images in message");
+      imgsAlt.push("");
+    } else {
+      // Add images data to arrays
+      for (i=0;i < imgs.length;i++) {
+        // Check for Gamma tracking pixel
+        if (imgs[i].attributes.src.value.indexOf("https://www.google.com/appserve/mkt/proof/img/") == 0) {
+          imgsSrc.push("Gamma tracking pixel");
+          imgsAlt.push("No alt text");
         } else {
-          imgsAlt.push("Missing alt text attribute - an alt text attribute should always be present to prevent text-to-speech readers from reading the image URL");
+          imgsSrc.push(imgs[i].attributes.src.value);
+          // Check if alt text attribute is present
+          if (imgs[i].attributes.alt) {
+            // Check if alt text is blank
+            if (imgs[i].attributes.alt.value.trim()) {
+              imgsAlt.push(imgs[i].attributes.alt.value.trim());
+            } else {
+              imgsAlt.push("No alt text");
+            };
+          } else {
+            imgsAlt.push("Missing alt text attribute - an alt text attribute should always be present to prevent text-to-speech readers from reading the image URL");
+          };
         };
       };
     };
