@@ -4,7 +4,7 @@ body {
  padding: 0;
 }
 h1 {
- color: #00695c;
+ color: #0097A7;
  font-family: "Product Sans", 'Helvetica Neue', Helvetica, Arial, sans-serif;
  font-size: 25px;
  font-weight: normal;
@@ -18,7 +18,7 @@ label {
  font-weight: normal;
 }
 h2 {
- color: #00695c;
+ color: #0097A7;
  font-size: 14pt;
  line-height: 29px;
  margin: 0;
@@ -39,9 +39,9 @@ section {
  padding: 15px 30px;
 }
 input[type="button"] {
- background-color: #00695c;
+ background-color: #0097A7;
  border-radius: 2px;
- border: 1px solid #00695c;
+ border: 1px solid #0097A7;
  color: #ffffff;
  cursor: pointer;
  font-size: 11px;
@@ -61,10 +61,10 @@ input[type="button"]:focus {
 </header>
 <section class="proof-form">
   <h2>Send Email Proof</h2>
-  <form id="send-proof">
+  <form id="send-proof" autocomplete="on">
     <!-- Hidden input for email template content -->
     <p>Paste your email content below (it should already be in your clipboard)</p>
-    <textarea id="email-html" name="email-html" placeholder="Paste content here"></textarea><br />
+    <textarea id="email-html" name="email-html" placeholder="Paste content here" autocomplete="off"></textarea><br />
     <!-- Email aliases -->
     <p>Select alias(es)</p>
     <!-- Dev email alias -->
@@ -82,7 +82,7 @@ input[type="button"]:focus {
     <!-- Send button -->
     <!-- Apps Scipt is not accepting document.forms[0].elements as an argument -->
     <!-- Instead I'm listing form values individually -->
-    <input type="button" value="Send Proof" onclick="google.script.run.withSuccessHandler(proofSuccess).send_proof(
+    <input type="button" value="Send Proof" onclick="google.script.run.withUserObject(loading('#proof-alert')).withSuccessHandler(proofSuccess).send_proof(
         document.forms[0].elements[0].value,
         document.forms[0].elements[1].checked,
         document.forms[0].elements[2].checked,
@@ -95,12 +95,12 @@ input[type="button"]:focus {
 </section>
 <section class="report-form">
   <h2>Send QA Report</h2>
-  <form id="send-report">
+  <form id="send-report" autocomplete="on">
     <!-- Custom email addresses -->
     <p>Add recipient(s) below (comma separated)</p>
     <input id="emails-report" type="text" placeholder="add email address(es)" name="emails-report"><br /><br />
     <!-- Send button -->
-    <input type="button" value="Send Report" onclick="google.script.run.withSuccessHandler(reportSuccess).send_report(
+    <input type="button" value="Send Report" onclick="google.script.run.withUserObject(loading('#report-alert')).withSuccessHandler(reportSuccess).send_report(
         reportData,
         document.forms[1].elements[0].value,
         document.forms[0].elements[4].value
@@ -240,6 +240,9 @@ input[type="button"]:focus {
         "alt" : imgsAlt
       }
     }
+  };
+  function loading(id) {
+    $(id).text("One moment, preparing to send...").fadeIn(200);
   };
   function proofSuccess() {
     $("#proof-alert").text("Your proof has been sent!").fadeIn(200).delay(5000).fadeOut(200);
