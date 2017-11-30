@@ -145,11 +145,36 @@ input[type="button"]:focus {
       // Add links data to arrays
       for (i=0;i < links.length;i++) {
         linksHref.push(links[i].attributes.href.value);
+        console.log("href " + i + " " + linksHref);
+        var linkContents = links[i].innerHTML.trim();
+        console.log("contents " + i + " " + linkContents);
         // Check if link contents are empty
-        if (links[i].innerHTML.trim()) {
-          linksInner.push(links[i].innerHTML.trim());
+        if (linkContents) {
+          // Check if link contents are an image
+          if (linkContents.startsWith("<img")) {
+            // Extract image src
+            var srcList = linkContents.match(/src=".*?"/g);
+            // Push cleaned image to list
+            if (srcList) {
+              if (srcList[0].endsWith('spacer.png"')) {
+                linksInner.push("Spacer image");
+                console.log("pushed spacer " + i);
+              } else {
+                linksInner.push("<img " + srcList[0] + " />");
+                console.log("pushed image " + i);
+              };
+            } else {
+              linksInner.push("Image has no src");
+              console.log("pushed image " + i);
+            }
+          } else {
+            // linksInner.push(linkContents);
+            linksInner.push(linkContents);
+            console.log("pushed text " + i);
+          };
         } else {
           linksInner.push("No linked content");
+          console.log("pushed no content " + i);
         };
       };
       // MSO LINKS
@@ -183,8 +208,9 @@ input[type="button"]:focus {
     } else {
       // Add images data to arrays
       for (i=0;i < imgs.length;i++) {
+        var imgSrc = imgs[i].attributes.src.value;
         // Check for Gamma tracking pixel
-        if (imgs[i].attributes.src.value.indexOf("https://www.google.com/appserve/mkt/proof/img/") == 0) {
+        if (imgSrc.startsWith("https://www.google.com/appserve/mkt/proof/img/")) {
           imgsSrc.push("Gamma tracking pixel");
           imgsAlt.push("No alt text");
         } else {
