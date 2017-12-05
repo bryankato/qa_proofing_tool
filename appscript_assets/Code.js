@@ -7,6 +7,7 @@ sessionId = Math.floor(Math.random() * (maximum - minimum + 1)) + minimum;
 function doGet(e) {
   // Create template for web app
   var output = HtmlService.createHtmlOutputFromFile('sendUi');
+  output.setFaviconUrl('https://services.google.com/fh/files/emails/proofing_tool_favicon_128x128.png');
   output.setTitle("Epsilon QA Proofing Tool");
   return output;
 };
