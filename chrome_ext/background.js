@@ -9,15 +9,21 @@ chrome.browserAction.onClicked.addListener(
 // and run pasteSource in new tab
 chrome.runtime.onMessage.addListener(function(request) {
   if (request.method == "openProofTab") {
-    chrome.tabs.create({
-      index : 1,
-      url : "https://script.google.com/a/google.com/macros/s/AKfycbwQDsAy6mA1e8vwiCuIWj2dJtwSunwjeN7iBADzugYAIbldNLge/exec"
-    },
-    function(tab) {
-      chrome.tabs.executeScript(tab.id, {
-        file : "pasteSource.js",
-        runAt : "document_end"
-      });
-    });
+    chrome.tabs.query(
+      {
+        active : true,
+        currentWindow : true
+      },
+      function(tab) {
+        var newTabIndex = tab[0].index + 1;
+        chrome.tabs.create(
+          {
+            index : newTabIndex,
+            url : "https://script.google.com/a/google.com/macros/s/AKfycbwQDsAy6mA1e8vwiCuIWj2dJtwSunwjeN7iBADzugYAIbldNLge/exec"
+          },
+          function(tab) {}
+        );
+      }
+    );
   };
 });
