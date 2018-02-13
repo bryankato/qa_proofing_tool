@@ -217,7 +217,8 @@ input[type="submit"]:focus {
       for (i=0;i < imgs.length;i++) {
         var imgSrc = imgs[i].attributes.src.value;
         // Check for Gamma tracking pixel
-        if (imgSrc.startsWith("https://www.google.com/appserve/mkt/proof/img/")) {
+        if (imgSrc.startsWith("https://www.google.com/appserve/mkt/proof/img/") ||
+            imgSrc.startsWith("https://gamma-redirector-staging.appspot.com/proof/img/")) {
           imgsSrc.push("Gamma tracking pixel");
           imgsAlt.push("No alt text");
         } else {
