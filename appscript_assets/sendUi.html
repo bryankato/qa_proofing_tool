@@ -151,7 +151,11 @@ input[type="submit"]:focus {
     } else {
       // Add links data to arrays
       for (i=0;i < links.length;i++) {
-        linksHref.push(links[i].attributes.href.value);
+        try {
+          linksHref.push(links[i].attributes.href.value);
+        } catch(err) {
+          linksHref.push("Link is missing href value");
+        }
         console.log("href " + i + " " + linksHref);
         var linkContents = links[i].innerHTML.trim();
         console.log("contents " + i + " " + linkContents);
