@@ -33,7 +33,7 @@ function sendEmail(emName, emRecipient, emSubject, emHtmlBody) {
   };
 };
 
-function send_proof(emailTemplate, sendToDevs, sendToQA, emails, gammaId) {
+function send_proof(emailTemplate, sendToDevs, sendToQA, emails, gammaId, subjectLine, fromName) {
   // Create recipient list
   var recipients = [];
   // Add dev alias
@@ -53,15 +53,24 @@ function send_proof(emailTemplate, sendToDevs, sendToQA, emails, gammaId) {
   var recipientList = recipients.toString();
   // Create template from string
   var htmlBody = HtmlService.createTemplate(emailTemplate).getRawContent();
-  // Add Gamma ID to subjectline
-  if (gammaId.trim()) {
-    var subject = "QA Proof | Gamma ID - " + gammaId + " | Proof ID - " + sessionId;
-  } else {
-    var subject = "QA Proof | Proof ID - " + sessionId;
+  // Create subject line
+  var subject = subjectLine.trim();
+  if (!subject) {
+    // Check for gamma ID and add to subject line
+    if (gammaId.trim()) {
+      var subject = "QA Proof | Gamma ID - " + gammaId + " | Proof ID - " + sessionId;
+    } else {
+      var subject = "QA Proof | Proof ID - " + sessionId;
+    };
+  };
+  // Create from name
+  var from = fromName.trim();
+  if (!from) {
+    var from = "QA Proofing Tool";
   };
   Logger.log(htmlBody);
   // Send email
-  sendEmail("QA Proofing Tool", recipientList, subject, htmlBody);
+  sendEmail(from, recipientList, subject, htmlBody);
 };
 
 function send_report(data, recipients, gammaId) {
