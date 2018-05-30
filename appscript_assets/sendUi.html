@@ -16,7 +16,7 @@ h3 {
  font-family: "Google Sans", 'Helvetica Neue', Helvetica, Arial, sans-serif;
  font-weight: normal;
 }
-p,
+font,
 label,
 textarea,
 input {
@@ -35,10 +35,11 @@ h3 {
  font-weight: 500;
  margin: 0;
 }
-p {
+font {
+  display: block;
   margin: 15px 0 10px 0;
 }
-p,
+font,
 label {
  color: #202124;
  font-size: 14px;
@@ -91,10 +92,10 @@ input[type="submit"]:focus {
   <h2>Send Email Proof</h2>
   <form id="send-proof" autocomplete="on" onsubmit="dummySubmit(); return false;">
     <!-- Hidden input for email template content -->
-    <p>Paste your email content below (it should already be in your clipboard)</p>
+    <font>Paste your email content below (it should already be in your clipboard)</font>
     <textarea id="email-html" name="email-html" placeholder="Paste content here" autocomplete="off"></textarea><br />
     <!-- Email aliases -->
-    <p>Select alias(es)</p>
+    <font>Select alias(es)</font>
     <!-- Dev email alias -->
     <input id="alias-dev-proof" type="checkbox" name="alias-dev-proof">
     <label for="alias-dev-proof">Dev Alias (solsethtctest@gmail.com)</label><br />
@@ -102,17 +103,17 @@ input[type="submit"]:focus {
     <input id="alias-qa-proof" type="checkbox" name="alias-qa-proof">
     <label for="alias-qa-proof">QA Alias (epsilonqatest@gmail.com​)</label><br />
     <!-- Custom email addresses -->
-    <p>Add individual recipient(s) below (comma separated)</p>
+    <font>Add individual recipient(s) below (comma separated)</font>
     <input id="emails-proof" type="text" placeholder="add email address(es)" name="emails-proof"><br /><br />
     <h3>Optional Settings:</h3>
     <!-- Gamma ID -->
-    <p>Gamma ID</p>
+    <font>Gamma ID</font>
     <input id="gamma-id-proof" type="text" placeholder="Gamma ID" name="gamma-id-proof"><br />
     <!-- Subjec tline -->
-    <p>Subject line</p>
+    <font>Subject line</font>
     <input id="gamma-id-proof" type="text" placeholder="Enter subject line" name="subject-line-proof"><br />
     <!-- From name -->
-    <p>From name</p>
+    <font>From name</font>
     <input id="gamma-id-proof" type="text" placeholder="Enter from name" name="from-name-proof">
     <!-- Send button -->
     <!-- Apps Scipt is not accepting document.forms[0].elements as an argument -->
@@ -128,13 +129,13 @@ input[type="submit"]:focus {
       )"
     />
   </form>
-  <p id="proof-alert"></p>
+  <font id="proof-alert"></font>
 </section>
 <section class="report-form">
   <h2>Send QA Report</h2>
   <form id="send-report" autocomplete="on" onsubmit="dummySubmit(); return false;">
     <!-- Custom email addresses -->
-    <p>Add recipient(s) below (comma separated)</p>
+    <font>Add recipient(s) below (comma separated)</font>
     <input id="emails-report" type="text" placeholder="add email address(es)" name="emails-report">
     <!-- Send button -->
     <input type="submit" value="Send Report" onclick="google.script.run.withUserObject(loading('#report-alert')).withSuccessHandler(reportSuccess).send_report(
@@ -144,7 +145,7 @@ input[type="submit"]:focus {
       )"
     />
   </form>
-  <p id="report-alert"></p>
+  <font id="report-alert"></font>
 </section>
 <section id="tool-preview">
 </section>
