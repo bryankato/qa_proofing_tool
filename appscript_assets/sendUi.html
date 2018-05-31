@@ -96,6 +96,9 @@ input[type="submit"]:focus {
     <textarea id="email-html" name="email-html" placeholder="Paste content here" autocomplete="off"></textarea><br />
     <!-- Email aliases -->
     <font>Select alias(es)</font>
+    <!-- LDAP -->
+    <input id="ldap-proof" type="checkbox" name="ldap-proof">
+    <label for="ldap-proof">Send to yourself (LDAP)</label><br />
     <!-- Dev email alias -->
     <input id="alias-dev-proof" type="checkbox" name="alias-dev-proof">
     <label for="alias-dev-proof">Dev Alias (solsethtctest@gmail.com)</label><br />
@@ -122,10 +125,11 @@ input[type="submit"]:focus {
         document.forms[0].elements[0].value,
         document.forms[0].elements[1].checked,
         document.forms[0].elements[2].checked,
-        document.forms[0].elements[3].value,
+        document.forms[0].elements[3].checked,
         document.forms[0].elements[4].value,
         document.forms[0].elements[5].value,
-        document.forms[0].elements[6].value
+        document.forms[0].elements[6].value,
+        document.forms[0].elements[7].value
       )"
     />
   </form>
@@ -134,9 +138,13 @@ input[type="submit"]:focus {
 <section class="report-form">
   <h2>Send QA Report</h2>
   <form id="send-report" autocomplete="on" onsubmit="dummySubmit(); return false;">
+    <font>Check links and alt text by sending yourself (LDAP) a QA Report</font>
+    <!-- <br/> -->
+    <!-- <h3>Optional Settings:</h3> -->
     <!-- Custom email addresses -->
-    <font>Add recipient(s) below (comma separated)</font>
-    <input id="emails-report" type="text" placeholder="add email address(es)" name="emails-report">
+    <!-- <font>Add additional recipient(s) below (comma separated)</font> -->
+    <!-- <input id="emails-report" type="text" placeholder="add email address(es)" name="emails-report"> -->
+    <input id="emails-report" type="hidden" placeholder="add email address(es)" name="emails-report">
     <!-- Send button -->
     <input type="submit" value="Send Report" onclick="google.script.run.withUserObject(loading('#report-alert')).withSuccessHandler(reportSuccess).send_report(
         reportData,

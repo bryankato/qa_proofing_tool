@@ -33,9 +33,13 @@ function sendEmail(emName, emRecipient, emSubject, emHtmlBody) {
   };
 };
 
-function send_proof(emailTemplate, sendToDevs, sendToQA, emails, gammaId, subjectLine, fromName) {
+function send_proof(emailTemplate, sendToLdap, sendToDevs, sendToQA, emails, gammaId, subjectLine, fromName) {
   // Create recipient list
   var recipients = [];
+  if (sendToLdap) {
+    var userEmail = Session.getActiveUser().getEmail();
+    recipients.push(userEmail);
+  };
   // Add dev alias
   if (sendToDevs) {
     recipients.push("solsethtctest@gmail.com");
@@ -73,10 +77,20 @@ function send_proof(emailTemplate, sendToDevs, sendToQA, emails, gammaId, subjec
   sendEmail(from, recipientList, subject, htmlBody);
 };
 
-function send_report(data, recipients, gammaId) {
+function send_report(data, addRecipients, gammaId) {
   var htmlBody = HtmlService.createTemplateFromFile("reportTemplate");
   htmlBody.data = data;
   var htmlTemplate = htmlBody.evaluate().asTemplate().getRawContent();
+  // Create recipient list
+  var recipients = [];
+  var userEmail = Session.getActiveUser().getEmail();
+  recipients.push(userEmail);
+  if (addRecipients) {
+    var addRecipientsList = commaStringToList(addRecipients);
+    recipients.push(addRecipientsList);
+  };
+  // Convert to comma delimited string
+  var recipientList = recipients.toString();
   // Add Gamma ID to subjectline
   if (gammaId.trim()) {
     var subject = "QA Report | Gamma ID - " + gammaId + " | Proof ID - " + sessionId;
@@ -84,7 +98,7 @@ function send_report(data, recipients, gammaId) {
     var subject = "QA Report | Proof ID - " + sessionId;
   };
   // Send email
-  sendEmail("QA Proofing Tool", recipients, subject, htmlTemplate);
+  sendEmail("QA Proofing Tool", recipientList, subject, htmlTemplate);
 };
 
 // Reformats Gamma Proofing Page HTML to comply with XML parser
