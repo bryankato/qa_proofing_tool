@@ -116,6 +116,15 @@ function getTrackedData(url) {
       "url" : url,
       "label" : "optout"
     };
+  } else if (url.indexOf("https://www.google.com/appserve/mkt/proof/optin") == 0 ||
+             url.indexOf("http://www.google.com/appserve/mkt/proof/optin") == 0 ||
+             url.indexOf("https://gamma-redirector-staging.appspot.com/proof/optin") == 0 ||
+             url.indexOf("http://gamma-redirector-staging.appspot.com/proof/optin") == 0) {
+  // In case of optin link
+    var trackedData = {
+      "url" : url,
+      "label" : "optin"
+    };
   } else if (url.indexOf("https://www.google.com/appserve/mkt/proof") == 0 ||
              url.indexOf("http://www.google.com/appserve/mkt/proof") == 0 ||
              url.indexOf("https://gamma-redirector-staging.appspot.com/proof") == 0 ||
